@@ -1,0 +1,74 @@
+import {
+  Controller,
+  Get,
+  Param,
+  Query,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
+import { OffersService } from './offers.service';
+import { GetOfferQueryDto } from './dto/get-offer-query.dto';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiQuery,
+} from '@nestjs/swagger';
+
+@ApiTags('Offers')
+@Controller('offers')
+export class OffersController {
+  constructor(private readonly offersService: OffersService) {}
+
+  @UsePipes(new ValidationPipe())
+  @Get('all')
+  @ApiOperation({ summary: 'Retrieve all offers' })
+  @ApiResponse({ status: 200, description: 'List of all offers' })
+  @ApiResponse({ status: 500, description: 'Server error' })
+  async getAll() {
+    const result = await this.offersService.fetchOffers();
+    return result;
+  }
+
+  @ApiOperation({ summary: 'Retrieve offers by geographic location' })
+  @ApiParam({
+    name: 'geo',
+    required: true,
+    description: 'Geographic location code',
+  })
+  @ApiQuery({
+    name: 'pageSize',
+    required: false,
+    description: 'Number of offers per page',
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Current page number',
+    type: Number,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'List of offers for the specified location',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Offers not found for the specified location',
+  })
+  @Get(':geo')
+  async getOffers(
+    @Param('geo') geo: string,
+    @Query(
+      new ValidationPipe({
+        transform: true,
+        transformOptions: { enableImplicitConversion: true },
+        forbidNonWhitelisted: true,
+      }),
+    )
+    query: GetOfferQueryDto,
+  ) {
+    return this.offersService.getOffersByGeo({ geo, ...query });
+  }
+}
