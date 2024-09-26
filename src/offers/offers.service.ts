@@ -145,4 +145,39 @@ export class OffersService implements OnModuleInit {
       throw error;
     }
   }
+
+  async getGeoStats() {
+    return this.offerModel.aggregate([
+      {
+        $unwind: '$geo',
+      },
+      {
+        $group: {
+          _id: {
+            code: '$geo.code',
+            name: '$geo.name',
+          },
+          offers: {
+            $push: {
+              name: '$name',
+              approval_time: '$approval_time',
+              site_url: '$site_url',
+              logo: '$logo',
+              rating: '$rating',
+              offer_currency_name: '$offer_currency.name',
+            },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          geo: '$_id',
+          offers: 1,
+          count: 1,
+        },
+      },
+    ]);
+  }
 }

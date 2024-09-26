@@ -31,7 +31,18 @@ export class OffersController {
     return result;
   }
 
-  @ApiOperation({ summary: 'Retrieve offers by geographic location' })
+  @Get('geo-stats')
+  @ApiOperation({ summary: 'Retrieve GEO statistics' })
+  @ApiResponse({ status: 200, description: 'List of GEO with offer counts' })
+  @ApiResponse({ status: 500, description: 'Server error' })
+  async getGeoStats() {
+    return this.offersService.getGeoStats();
+  }
+
+  @ApiOperation({
+    summary:
+      'Retrieve a list of all GEOs with the corresponding number of offers',
+  })
   @ApiParam({
     name: 'geo',
     required: true,
