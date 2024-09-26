@@ -16,12 +16,32 @@ import { CITYADS_OFFER_LIST_URL } from './common/offers.constants';
 @Injectable()
 export class OffersService implements OnModuleInit {
   private readonly logger: Logger = new Logger(OffersService.name);
+  private isSync = false;
   constructor(
     @InjectModel(Offer.name) private offerModel: Model<OfferDocument>,
   ) {}
 
   async onModuleInit() {
     await this.fetchOffers();
+  }
+
+  async syncOffers() {
+    if (this.isSync) {
+      this.logger.warn(
+        'Synchronization is already in progress. Repeated call is blocked.',
+      );
+      throw new Error('Synchronization is already in progress');
+    }
+
+    this.isSync = true;
+
+    try {
+      this.logger.log('Starting synchronization with external source...');
+      return await this.fetchOffers();
+    } finally {
+      this.isSync = false;
+      this.logger.log('Synchronization completed.');
+    }
   }
 
   async fetchOffers() {

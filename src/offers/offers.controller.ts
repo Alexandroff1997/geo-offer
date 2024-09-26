@@ -1,7 +1,9 @@
 import {
+  ConflictException,
   Controller,
   Get,
   Param,
+  Post,
   Query,
   UsePipes,
   ValidationPipe,
@@ -20,6 +22,28 @@ import {
 @Controller('offers')
 export class OffersController {
   constructor(private readonly offersService: OffersService) {}
+
+  @Post('sync')
+  @ApiOperation({ summary: 'Start synchronization with an external source' })
+  @ApiResponse({
+    status: 200,
+    description: 'Synchronization started successfully',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Synchronization is already in progress',
+  })
+  async syncOffers() {
+    try {
+      await this.offersService.syncOffers();
+      return { message: 'Synchronization started successfully' };
+    } catch (error) {
+      if (error.message === 'Synchronization is already in progress') {
+        throw new ConflictException(error.message);
+      }
+      throw error;
+    }
+  }
 
   @UsePipes(new ValidationPipe())
   @Get('all')
