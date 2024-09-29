@@ -1,0 +1,104 @@
+{
+	"info": {
+		"_postman_id": "80594dad-5c86-44a3-abb3-29fd63ddbd17",
+		"name": "geo-offer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32549572"
+	},
+	"item": [
+		{
+			"name": "Список всех офферов",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/offers/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"offers",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Список офферов для конкретного geo",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/offers/RU?page=1&pageSize=19",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"offers",
+						"RU"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "pageSize",
+							"value": "19"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Список всех офферов с группировкой по geo",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/offers/geo-stats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"offers",
+						"geo-stats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Синхронизация списка офферов",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/offers/sync",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"offers",
+						"sync"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
